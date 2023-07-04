@@ -6,14 +6,27 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var tableView: UITableView!
+    
+    let disposeBag = DisposeBag()
+    
+    var viewModel = ArticleListViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        viewModel.getArticles()
+        
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        viewModel.articles.bind(to: tableView.rx.items(cellIdentifier: "Cell")) { row, article, cell in
+            cell.textLabel?.text = article.title
+        }
+        .disposed(by: disposeBag)
     }
-
-
 }
 
