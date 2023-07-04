@@ -20,6 +20,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.title = "ReadQiitaApp"
+        
         viewModel.getArticles()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
@@ -27,6 +29,22 @@ class ViewController: UIViewController {
             cell.textLabel?.text = article.title
         }
         .disposed(by: disposeBag)
+        
+        
+        tableView.rx.modelSelected(Article.self)
+            .subscribe(onNext: { [weak self] article in
+                let vc: ArticleViewController = ArticleViewController()
+                vc.url = article.url
+                self?.navigationController?.pushViewController(vc, animated: true)
+                
+            })
+            .disposed(by: disposeBag)
+        
+        tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+            self?.tableView.deselectRow(at: indexPath, animated: true)
+        })
+        .disposed(by: disposeBag)
+
     }
 }
 
