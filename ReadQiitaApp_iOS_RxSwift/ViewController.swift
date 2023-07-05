@@ -10,21 +10,30 @@ import RxSwift
 import RxCocoa
 
 class ViewController: UIViewController {
-
-    @IBOutlet weak var tableView: UITableView!
     
-    let disposeBag = DisposeBag()
+    @IBOutlet private weak var tableView: UITableView!
     
-    var viewModel = ArticleListViewModel()
+    private let disposeBag = DisposeBag()
+    
+    private let viewModel = ArticleListViewModel()
+    
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         navigationItem.title = "ReadQiitaApp"
-        
+        initTableView()
+    }
+    
+    
+    private func initTableView() {
         viewModel.getArticles()
         
         tableView.register(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: "ArticleCell")
+        tableView.refreshControl = refreshControl
+        
+        // セルをセット
         viewModel.articles.bind(to: tableView.rx.items(cellIdentifier: "ArticleCell", cellType: ArticleCell.self)) { row, article, cell in
             cell.userNameLabel.text = "@\(article.user.id)"
             cell.organizationLabel.text = article.user.organization
@@ -35,7 +44,7 @@ class ViewController: UIViewController {
         }
         .disposed(by: disposeBag)
         
-        
+        // セルタップ
         tableView.rx.modelSelected(Article.self)
             .subscribe(onNext: { [weak self] article in
                 let vc: ArticleViewController = ArticleViewController()
@@ -45,13 +54,20 @@ class ViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        // 選択状態のハイライト解除
         tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
             self?.tableView.deselectRow(at: indexPath, animated: true)
         })
         .disposed(by: disposeBag)
-
+        
+        // リフレッシュコントロール
+        refreshControl.rx.controlEvent(.valueChanged)
+            .subscribe(onNext: { [weak self] in
+                self?.viewModel.getArticles()
+                self?.refreshControl.endRefreshing()
+            })
+            .disposed(by: disposeBag)
     }
-    
     
     
 }
