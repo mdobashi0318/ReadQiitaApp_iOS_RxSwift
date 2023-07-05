@@ -24,9 +24,14 @@ class ViewController: UIViewController {
         
         viewModel.getArticles()
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        viewModel.articles.bind(to: tableView.rx.items(cellIdentifier: "Cell")) { row, article, cell in
-            cell.textLabel?.text = article.title
+        tableView.register(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: "ArticleCell")
+        viewModel.articles.bind(to: tableView.rx.items(cellIdentifier: "ArticleCell", cellType: ArticleCell.self)) { row, article, cell in
+            cell.userNameLabel.text = "@\(article.user.id)"
+            cell.organizationLabel.text = article.user.organization
+            cell.dateLabel.text = self.viewModel.created_at(article.created_at)
+            cell.titleLabel.text = article.title
+            cell.tagsLabel.text = self.viewModel.tags(article.tags)
+            cell.lileCountLabel.text = "\(article.likes_count)"
         }
         .disposed(by: disposeBag)
         
@@ -46,5 +51,8 @@ class ViewController: UIViewController {
         .disposed(by: disposeBag)
 
     }
+    
+    
+    
 }
 
