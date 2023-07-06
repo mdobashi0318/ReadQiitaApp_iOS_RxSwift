@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = "ReadQiitaApp"
+        initNavigationItem()
         initTableView()
     }
     
@@ -48,6 +48,8 @@ class ViewController: UIViewController {
         tableView.rx.modelSelected(Article.self)
             .subscribe(onNext: { [weak self] article in
                 let vc: ArticleViewController = ArticleViewController()
+                vc.id = article.id
+                vc.articleTitle = article.title
                 vc.url = article.url
                 self?.navigationController?.pushViewController(vc, animated: true)
                 
@@ -70,5 +72,21 @@ class ViewController: UIViewController {
     }
     
     
+    private func initNavigationItem() {
+        navigationItem.title = "ReadQiitaApp"
+        
+        let bookmarkButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"), style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = bookmarkButton
+        
+        bookmarkButton.rx.tap.subscribe(onNext:  { [weak self] in
+            let vc: BookmarkListViewController = BookmarkListViewController()
+            let navi = UINavigationController(rootViewController: vc)
+            navi.modalPresentationStyle = .fullScreen
+            self?.navigationController?.present(navi, animated: true)
+        })
+        .disposed(by: disposeBag)
+        
+        
+    }
 }
 
