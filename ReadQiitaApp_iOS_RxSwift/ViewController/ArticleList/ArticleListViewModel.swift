@@ -15,12 +15,16 @@ struct  ArticleListViewModel {
     let articles = BehaviorRelay<[Article]>(value: [])
     
     
-    func getArticles() {
+    func getArticles(failure: @escaping () -> Void) {
         APIManager.get(request: "items", success: { response in
             self.articles.accept(response)
         }, failure: { error in
-            print(error.message)
-            // TODO: アラート表示
+            
+            DispatchQueue.main.async {
+                print(error.message)
+                failure()
+            }
+            
         })
     
     }

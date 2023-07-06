@@ -11,6 +11,7 @@
 		6D0526F22A56622D0083D5E1 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 6D0526F12A56622D0083D5E1 /* RealmSwift */; };
 		6D0526F42A5663480083D5E1 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0526F32A5663480083D5E1 /* Bookmark.swift */; };
 		6D0526F72A566F670083D5E1 /* ArticleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0526F62A566F670083D5E1 /* ArticleViewModel.swift */; };
+		6D0526F92A56BD550083D5E1 /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0526F82A56BD550083D5E1 /* AlertManager.swift */; };
 		6D56874A2A54FD0400A08D08 /* ArticleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5687482A54FD0400A08D08 /* ArticleCell.swift */; };
 		6D56874B2A54FD0400A08D08 /* ArticleCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6D5687492A54FD0400A08D08 /* ArticleCell.xib */; };
 		6D58D2442A5570F3005D053C /* BookmarkListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D58D2422A5570F3005D053C /* BookmarkListViewController.swift */; };
@@ -36,6 +37,7 @@
 /* Begin PBXFileReference section */
 		6D0526F32A5663480083D5E1 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		6D0526F62A566F670083D5E1 /* ArticleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleViewModel.swift; sourceTree = "<group>"; };
+		6D0526F82A56BD550083D5E1 /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		6D5687482A54FD0400A08D08 /* ArticleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleCell.swift; sourceTree = "<group>"; };
 		6D5687492A54FD0400A08D08 /* ArticleCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ArticleCell.xib; sourceTree = "<group>"; };
 		6D58D2422A5570F3005D053C /* BookmarkListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkListViewController.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				6DA22D9D2A52B1CA00454712 /* APIManager.swift */,
+				6D0526F82A56BD550083D5E1 /* AlertManager.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -278,6 +281,7 @@
 				6D7298752A52AA89002A06AE /* SceneDelegate.swift in Sources */,
 				6D56874A2A54FD0400A08D08 /* ArticleCell.swift in Sources */,
 				6DA22D9C2A52B18100454712 /* ArticleListViewModel.swift in Sources */,
+				6D0526F92A56BD550083D5E1 /* AlertManager.swift in Sources */,
 				6D0526F42A5663480083D5E1 /* Bookmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

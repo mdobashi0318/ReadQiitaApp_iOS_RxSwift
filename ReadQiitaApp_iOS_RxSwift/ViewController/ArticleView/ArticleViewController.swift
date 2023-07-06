@@ -34,8 +34,9 @@ class ArticleViewController: UIViewController {
         initNavigationItem()
         
         guard let url = URL(string: url) else {
-            print("url Error")
-            // TODO: アラート出す
+            AlertManager.showAlert(self, type: .ok, message: "記事の表示に失敗しましました。", didTapPositiveButton: { _ in
+                self.navigationController?.popViewController(animated: true)
+            })
             return
         }
         webView.load(URLRequest(url: url))
@@ -62,7 +63,11 @@ class ArticleViewController: UIViewController {
             guard let self else{
                 return
             }
-                viewModel.add(id: id, title: articleTitle, url: url, success: {}, failure: {})
+                viewModel.add(id: id, title: articleTitle, url: url, success: {
+                    AlertManager.showAlert(self, type: .ok, message: "ブックマークに追加しました。")
+                }, failure: {
+                    AlertManager.showAlert(self, type: .ok, message: "ブックマークに追加に失敗しました。")
+                })
         })
         .disposed(by: disposeBag)
         
@@ -71,7 +76,11 @@ class ArticleViewController: UIViewController {
             guard let self else{
                 return
             }
-            viewModel.delete(id: id, title: articleTitle, url: url, success: {}, failure: {})
+            viewModel.delete(id: id, title: articleTitle, url: url, success: {
+                AlertManager.showAlert(self, type: .ok, message: "ブックマークから削除しました。")
+            }, failure: {
+                AlertManager.showAlert(self, type: .ok, message: "ブックマークから削除に失敗しました。")
+            })
         })
         .disposed(by: disposeBag)
         

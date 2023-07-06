@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     
     
     private func initTableView() {
-        viewModel.getArticles()
+        getArticles()
         
         tableView.register(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: "ArticleCell")
         tableView.refreshControl = refreshControl
@@ -65,8 +65,12 @@ class ViewController: UIViewController {
         // リフレッシュコントロール
         refreshControl.rx.controlEvent(.valueChanged)
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.getArticles()
-                self?.refreshControl.endRefreshing()
+                guard let self else {
+                    self?.refreshControl.endRefreshing()
+                    return
+                }
+                getArticles()
+                refreshControl.endRefreshing()
             })
             .disposed(by: disposeBag)
     }
@@ -87,6 +91,15 @@ class ViewController: UIViewController {
         .disposed(by: disposeBag)
         
         
+    }
+    
+    
+    private func getArticles() {
+        viewModel.getArticles() {
+            AlertManager.showAlert(self, type: .retry, message: "再接続しますか?", didTapPositiveButton: { _ in
+                self.getArticles()
+            })
+        }
     }
 }
 
