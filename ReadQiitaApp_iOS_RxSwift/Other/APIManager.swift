@@ -25,7 +25,12 @@ struct APIManager {
             .responseData { result in
             
             do {
-                let articles = try JSONDecoder().decode(T.self, from: result.data!)
+                guard let data = result.data else {
+                    failure(APIError.init(message: "response Error"))
+                    return
+                }
+                
+                let articles = try JSONDecoder().decode(T.self, from: data)
                 success(articles)
             } catch {
                 failure(APIError.init(message: error.localizedDescription))
