@@ -7,7 +7,7 @@
 
 import Foundation
 import Alamofire
-
+import RxSwift
 
 
 struct APIManager {
@@ -38,6 +38,34 @@ struct APIManager {
             
         }
         
+    }
+    
+    
+    static func request<T: Codable>(request: String) -> Observable<T> {
+        return Observable.create { observable in
+            guard let url = URL(string: baseUrl + request) else {
+                observable.onError(APIError(message: "response Error"))
+                return Disposables.create()
+            }
+            AF.request(url)
+                .validate()
+                .responseData { result in
+                do {
+                    guard let data = result.data else {
+                        observable.onError(APIError(message: "response Error"))
+                        return
+                    }
+                    
+                    let articles = try JSONDecoder().decode(T.self, from: data)
+                    observable.onNext(articles)
+                    observable.onCompleted()
+                } catch {
+                    observable.onError(APIError(message: error.localizedDescription))
+                }
+                
+            }
+            return Disposables.create()
+        }
     }
     
 }

@@ -95,11 +95,16 @@ class ViewController: UIViewController {
     
     
     private func getArticles() {
-        viewModel.getArticles() {
+        Indicator.show(self.navigationController?.view)
+        viewModel.getArticles(success: {
+            Indicator.dismiss()
+        }) {
             AlertManager.showAlert(self, type: .retry, message: "再接続しますか?", didTapPositiveButton: { _ in
+                Indicator.dismiss()
                 self.getArticles()
+            }, didTapNegativeButton: { _ in
+                Indicator.dismiss()
             })
         }
     }
 }
-

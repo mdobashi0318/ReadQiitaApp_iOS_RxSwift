@@ -32,6 +32,7 @@
 		6DA22D9C2A52B18100454712 /* ArticleListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA22D9B2A52B18100454712 /* ArticleListViewModel.swift */; };
 		6DA22D9E2A52B1CA00454712 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA22D9D2A52B1CA00454712 /* APIManager.swift */; };
 		6DA22DA12A52B21E00454712 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 6DA22DA02A52B21E00454712 /* Alamofire */; };
+		6DCD88F42B6C9C9000C98785 /* Indicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCD88F32B6C9C9000C98785 /* Indicator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		6DA22D932A52AD4400454712 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		6DA22D9B2A52B18100454712 /* ArticleListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleListViewModel.swift; sourceTree = "<group>"; };
 		6DA22D9D2A52B1CA00454712 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
+		6DCD88F32B6C9C9000C98785 /* Indicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Indicator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 		6D7298712A52AA89002A06AE /* ReadQiitaApp_iOS_RxSwift */ = {
 			isa = PBXGroup;
 			children = (
+				6DCD88F22B6C9C8100C98785 /* View */,
 				6D7298722A52AA89002A06AE /* AppDelegate.swift */,
 				6D7298742A52AA89002A06AE /* SceneDelegate.swift */,
 				6D93ECCC2A555D8600AE0603 /* ViewController */,
@@ -181,6 +184,14 @@
 				6D0526F32A5663480083D5E1 /* Bookmark.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		6DCD88F22B6C9C8100C98785 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				6DCD88F32B6C9C9000C98785 /* Indicator.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -282,6 +293,7 @@
 				6D56874A2A54FD0400A08D08 /* ArticleCell.swift in Sources */,
 				6DA22D9C2A52B18100454712 /* ArticleListViewModel.swift in Sources */,
 				6D0526F92A56BD550083D5E1 /* AlertManager.swift in Sources */,
+				6DCD88F42B6C9C9000C98785 /* Indicator.swift in Sources */,
 				6D0526F42A5663480083D5E1 /* Bookmark.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
