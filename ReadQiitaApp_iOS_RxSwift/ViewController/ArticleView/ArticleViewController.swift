@@ -32,6 +32,7 @@ class ArticleViewController: UIViewController {
         
         viewModel.find(id: id)
         initNavigationItem()
+        webView.navigationDelegate = self
         
         guard let url = URL(string: url) else {
             AlertManager.showAlert(self, type: .ok, message: "記事の表示に失敗しましました。", didTapPositiveButton: { _ in
@@ -85,4 +86,24 @@ class ArticleViewController: UIViewController {
         .disposed(by: disposeBag)
         
     }
+}
+
+
+// MARK: - WKNavigationDelegate
+
+extension ArticleViewController: WKNavigationDelegate {
+    
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        Indicator.show(self.navigationController?.view)
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        Indicator.dismiss()
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError: Error) {
+        Indicator.dismiss()
+    }
+    
+    
 }
