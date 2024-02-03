@@ -13,6 +13,8 @@ class BookmarkListViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     
+    @IBOutlet weak var noDataLable: UILabel!
+
     private let disposeBag = DisposeBag()
     
     private let bookmarkList = BehaviorRelay<[Bookmark]>(value: [])
@@ -29,6 +31,12 @@ class BookmarkListViewController: UIViewController {
         super.viewWillAppear(animated)
         
         bookmarkList.accept(Bookmark.getAll())
+        
+        if bookmarkList.value.isEmpty {
+            noDataLable.isHidden = false
+        } else {
+            noDataLable.isHidden = true
+        }
     }
     
     

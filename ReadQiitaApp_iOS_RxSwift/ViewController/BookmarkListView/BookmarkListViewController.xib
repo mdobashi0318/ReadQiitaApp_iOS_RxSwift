@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BookmarkListViewController" customModule="ReadQiitaApp_iOS_RxSwift" customModuleProvider="target">
             <connections>
+                <outlet property="noDataLable" destination="5uG-WY-Ogg" id="VQb-nW-20v"/>
                 <outlet property="tableView" destination="6bL-Ld-b8z" id="nfJ-qf-xJm"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -24,12 +25,22 @@
                     <rect key="frame" x="0.0" y="59" width="393" height="759"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ブックマークがありません" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5uG-WY-Ogg">
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="5uG-WY-Ogg" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="0dN-sX-C1K"/>
                 <constraint firstItem="6bL-Ld-b8z" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="24B-Jp-zXt"/>
+                <constraint firstItem="5uG-WY-Ogg" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Ldw-ug-bbA"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="5uG-WY-Ogg" secondAttribute="trailing" id="elA-cx-zHy"/>
                 <constraint firstAttribute="trailing" secondItem="6bL-Ld-b8z" secondAttribute="trailing" id="fxx-pK-XxE"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="5uG-WY-Ogg" secondAttribute="bottom" id="h6Z-fm-qXf"/>
                 <constraint firstItem="6bL-Ld-b8z" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="hdH-re-xgt"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="6bL-Ld-b8z" secondAttribute="bottom" id="rqb-1G-a8Q"/>
             </constraints>
