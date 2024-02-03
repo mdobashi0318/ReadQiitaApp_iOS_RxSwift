@@ -51,14 +51,14 @@ class Bookmark: Object {
     static func add(_ bookmark: Bookmark) throws {
         do {
             guard let realm else {
-                throw APIError(message: "初期化エラー")
+                throw DBError(message: "初期化エラー")
             }
             
             try realm.write {
                 realm.add(bookmark)
             }
         } catch {
-            throw APIError(message: "追加エラー")
+            throw DBError(message: "追加エラー")
         }
     }
     
@@ -66,14 +66,14 @@ class Bookmark: Object {
     static func delete(_ bookmark: Bookmark) throws {
         do {
             guard let realm else {
-                throw APIError(message: "初期化エラー")
+                throw DBError(message: "初期化エラー")
             }
             
             try realm.write {
                 realm.delete(bookmark)
             }
         } catch {
-            throw APIError(message: "削除エラー")
+            throw DBError(message: "削除エラー")
         }
     }
     

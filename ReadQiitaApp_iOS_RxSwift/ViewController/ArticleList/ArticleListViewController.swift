@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     
+    @IBOutlet weak var searchbar: UISearchBar!
+    
     private let disposeBag = DisposeBag()
     
     private let viewModel = ArticleListViewModel()
@@ -24,11 +26,12 @@ class ViewController: UIViewController {
         
         initNavigationItem()
         initTableView()
+        initSearchbar()
     }
     
     
     private func initTableView() {
-        getArticles()
+        getArticleList()
         
         tableView.register(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: "ArticleCell")
         tableView.refreshControl = refreshControl
@@ -69,7 +72,7 @@ class ViewController: UIViewController {
                     self?.refreshControl.endRefreshing()
                     return
                 }
-                getArticles()
+                self.getArticleList()
                 refreshControl.endRefreshing()
             })
             .disposed(by: disposeBag)
@@ -89,8 +92,34 @@ class ViewController: UIViewController {
             self?.navigationController?.present(navi, animated: true)
         })
         .disposed(by: disposeBag)
+
+    }
+    
+    
+    private func initSearchbar() {
+        searchbar.rx.text
+            .orEmpty
+            .bind(onNext: { [weak self] in
+                guard let self else { return }
+                self.viewModel.searchText.accept($0)
+            })
+            .disposed(by: disposeBag)
         
-        
+        searchbar.rx.searchButtonClicked.subscribe(onNext: { [weak self] in
+            guard let self else { return }
+            self.getArticleList()
+            self.view.endEditing(true)
+        })
+        .disposed(by: disposeBag)
+    }
+    
+    
+    private func getArticleList() {
+        if self.viewModel.searchText.value.isEmpty {
+            self.getArticles()
+        } else {
+            self.getTagArticles()
+        }
     }
     
     
@@ -98,13 +127,53 @@ class ViewController: UIViewController {
         Indicator.show(self.navigationController?.view)
         viewModel.getArticles(success: {
             Indicator.dismiss()
-        }) {
-            AlertManager.showAlert(self, type: .retry, message: "再接続しますか?", didTapPositiveButton: { _ in
-                Indicator.dismiss()
-                self.getArticles()
-            }, didTapNegativeButton: { _ in
-                Indicator.dismiss()
-            })
-        }
+            if !self.viewModel.articles.value.isEmpty {
+                self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: true)
+            }
+            
+        },failure: { message, type in
+            switch type {
+            case .not_found:
+                AlertManager.showAlert(self, type: .ok, message: message, didTapPositiveButton: { _ in
+                    Indicator.dismiss()
+                })
+                
+            default:
+                AlertManager.showAlert(self, type: .retry, message: "再接続しますか?", didTapPositiveButton: { _ in
+                    Indicator.dismiss()
+                    self.getTagArticles()
+                }, didTapNegativeButton: { _ in
+                    Indicator.dismiss()
+                })
+            }
+        })
+    }
+    
+    private func getTagArticles() {
+        Indicator.show(self.navigationController?.view)
+        self.viewModel.getTagArticles(success: {
+            Indicator.dismiss()
+            if !self.viewModel.articles.value.isEmpty {
+                self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: true)
+            }
+            
+        }, failure: { message, type in
+            switch type {
+            case .not_found:
+                AlertManager.showAlert(self, type: .ok, message: message, didTapPositiveButton: { _ in
+                    Indicator.dismiss()
+                })
+                
+            default:
+                AlertManager.showAlert(self, type: .retry, message: "再接続しますか?", didTapPositiveButton: { _ in
+                    Indicator.dismiss()
+                    self.getTagArticles()
+                }, didTapNegativeButton: { _ in
+                    Indicator.dismiss()
+                })
+            }
+            
+        })
+
     }
 }

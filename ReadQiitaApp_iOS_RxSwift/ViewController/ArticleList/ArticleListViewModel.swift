@@ -16,34 +16,68 @@ struct  ArticleListViewModel {
     
     let articles = BehaviorRelay<[Article]>(value: [])
     
+    let searchText = BehaviorRelay<String>(value: "")
     
-//    func getArticles(failure: @escaping () -> Void) {
-//        APIManager.get(request: "items", success: { response in
-//            self.articles.accept(response)
-//        }, failure: { error in
-//            
-//            DispatchQueue.main.async {
-//                print(error.message)
-//                failure()
-//            }
-//            
-//        })
-//    }
     
-    func getArticles(success: @escaping () -> Void, failure: @escaping () -> Void) {
+    func getArticles(success: @escaping () -> Void, failure: @escaping (String, ErrorResponse.ErrorType) -> Void) {
         APIManager.request(request: "items")
             .subscribe(onNext: { response in
                 self.articles.accept(response)
                 success()
+                
             }, onError: { error  in
                 DispatchQueue.main.async {
+                    var message = ""
                     if let error = error as? APIError {
-                        print(error.message)
+                        switch error.type { 
+                        case .not_found:
+                            message = error.message
+                            print("APIError: \(error.message)")
+                            failure(message, error.type)
+                            
+                        default:
+                            message = error.message
+                            print("APIError: \(error.message)")
+                            failure(message, .undefined)
+                        }
+                        
                     } else {
-                        print(error.localizedDescription)
+                        print("APIError: \(error.localizedDescription)")
+                        failure(message, .undefined)
                     }
-                    failure()
                 }
+                
+            }, onCompleted: {
+                print("完了")
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    
+    
+    func getTagArticles(success: @escaping () -> Void, failure: @escaping (String, ErrorResponse.ErrorType) -> Void) {
+        APIManager.request(request: "tags/\(searchText.value)/items")
+            .subscribe(onNext: { response in
+                self.articles.accept(response)
+                success()
+                
+            }, onError: { error  in
+                DispatchQueue.main.async {
+                    var message = ""
+                    if let error = error as? APIError {
+                        if error.type == .not_found {
+                            message = error.message
+                        }
+                        print("APIError: \(error.message)")
+                        failure(message, error.type)
+                    } else {
+                        print("APIError: \(error.localizedDescription)")
+                        failure(message, .undefined)
+                        
+                    }
+                    
+                }
+                
             }, onCompleted: {
                 print("完了")
             })

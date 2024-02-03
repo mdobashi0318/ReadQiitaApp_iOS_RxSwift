@@ -14,45 +14,19 @@ struct APIManager {
     
     private static let baseUrl = "https://qiita.com/api/v2/"
         
-    static func get<T: Codable>(request: String, success: @escaping (T) -> Void, failure: @escaping (APIError) -> Void)  {
-        guard let url = URL(string: baseUrl + request) else {
-            failure(APIError.init(message: "url Error"))
-            return
-        }
-        
-        AF.request(url)
-            .validate()
-            .responseData { result in
-            
-            do {
-                guard let data = result.data else {
-                    failure(APIError.init(message: "response Error"))
-                    return
-                }
-                
-                let articles = try JSONDecoder().decode(T.self, from: data)
-                success(articles)
-            } catch {
-                failure(APIError.init(message: error.localizedDescription))
-            }
-            
-        }
-        
-    }
-    
-    
     static func request<T: Codable>(request: String) -> Observable<T> {
         return Observable.create { observable in
             guard let url = URL(string: baseUrl + request) else {
-                observable.onError(APIError(message: "response Error"))
+                observable.onError(APIError(message: "url Error", type: .undefined))
                 return Disposables.create()
             }
+            
             AF.request(url)
                 .validate()
                 .responseData { result in
                 do {
                     guard let data = result.data else {
-                        observable.onError(APIError(message: "response Error"))
+                        observable.onError(APIError(message: "response Error", type: .undefined))
                         return
                     }
                     
@@ -60,7 +34,17 @@ struct APIManager {
                     observable.onNext(articles)
                     observable.onCompleted()
                 } catch {
-                    observable.onError(APIError(message: error.localizedDescription))
+                    if let data = result.data,let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
+                        switch errorResponse.type {
+                        case ErrorResponse.ErrorType.not_found.rawValue:
+                            observable.onError(APIError(message: "検索に一致する記事はありませんでした。", type: .not_found))
+                        default:
+                            observable.onError(APIError(message: "response Error", type: .undefined))
+                        }
+                        
+                    }
+                    
+                    observable.onError(APIError(message: "response Error", type: .undefined))
                 }
                 
             }
@@ -72,6 +56,18 @@ struct APIManager {
 
 
 struct APIError: Error {
+    var message: String = ""
+    var type: ErrorResponse.ErrorType
+    
+    init(message: String, type: ErrorResponse.ErrorType) {
+        self.message = message
+        self.type = type
+    }
+}
+
+
+
+struct DBError: Error {
     var message: String = ""
     
     init(message: String) {
