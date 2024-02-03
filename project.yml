@@ -1,0 +1,68 @@
+name: ReadQiitaApp_iOS_RxSwift
+targets:
+  ReadQiitaApp_iOS_RxSwift:
+    type: application
+    platform: iOS
+    deploymentTarget: &deployment_target "15.0"
+    sources:
+         - ReadQiitaApp_iOS_RxSwift
+    info:
+      path: ReadQiitaApp_iOS_RxSwift/Info.plist
+      properties:
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UILaunchStoryboardName: LaunchScreen
+        UIApplicationSceneManifest:
+         UIApplicationSupportsMultipleScenes: false
+         UISceneConfigurations:
+          UIWindowSceneSessionRoleApplication:
+           - UISceneConfigurationName: Default Configuration
+             UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+             UISceneStoryboardFile: Main
+    settings:
+        base:
+         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+         CODE_SIGN_STYLE: Automatic
+         DEVELOPMENT_TEAM: 7RPFL7EXKD
+         ENABLE_PREVIEWS: YES
+         INFOPLIST_FILE: ReadQiitaApp_iOS_RxSwift/Info.plist
+         MARKETING_VERSION: &marketing_version 1.0
+         CURRENT_PROJECT_VERSIO: 1
+         PRODUCT_BUNDLE_IDENTIFIER: "masaharu.dobashi.ReadQiitaApp-iOS-RxSwift"
+         PRODUCT_NAME: "$(TARGET_NAME)"
+    options:
+        developmentLanguage: ja
+    dependencies:
+        - package: Realm
+          product: RealmSwift
+        - package: RxSwift
+          product: RxCocoa
+        - package: Alamofire
+
+packages:
+ XcodeGen:
+    url: https://github.com/yonaskolb/XcodeGen
+    version: 2.37.0
+ Realm:
+    url: https://github.com/realm/realm-swift
+    version: 10.43.1
+ RxSwift:
+    url: https://github.com/ReactiveX/RxSwift
+    version: 6.6.0
+ Alamofire:
+    url: https://github.com/Alamofire/Alamofire
+    version: 5.8.1
+
+schemes:
+   ReadQiitaApp_iOS_RxSwift:
+    build:
+      targets:
+        ReadQiitaApp_iOS_RxSwift: all
+    run:
+      config: Debug
+    profile:
+      config: Release
+    analyze:
+      config: Debug
+    archive:
+      config: Release
