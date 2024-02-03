@@ -10,6 +10,12 @@ targets:
       path: ReadQiitaApp_iOS_RxSwift/Info.plist
       properties:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        UISupportedInterfaceOrientations~ipad: [
+        UIInterfaceOrientationPortrait,
+         UIInterfaceOrientationPortraitUpsideDown,
+         UIInterfaceOrientationLandscapeLeft,
+          UIInterfaceOrientationLandscapeRight
+          ]
         UILaunchStoryboardName: LaunchScreen
         UIApplicationSceneManifest:
          UIApplicationSupportsMultipleScenes: false
