@@ -5,7 +5,7 @@
 1. Clone the project.
 ```
    git clone https://github.com/mdobashi0318/ReadQiitaApp_iOS_RxSwift.git
-   cd TodoList_SwiftUI
+   cd ReadQiitaApp_iOS_RxSwift
    xcodegen generate
 ```
 or 
