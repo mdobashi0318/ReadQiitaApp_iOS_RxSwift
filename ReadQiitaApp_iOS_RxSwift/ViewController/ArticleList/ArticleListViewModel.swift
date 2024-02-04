@@ -67,9 +67,9 @@ struct  ArticleListViewModel {
                     var message = ""
                     if let error = error as? APIError {
                         if error.type == .not_found {
-                            message = error.message
+                            message = "検索に一致するタグはありませんでした"
                         }
-                        print("APIError: \(error.message)")
+                        print("APIError: \(message)")
                         failure(message, error.type)
                     } else {
                         print("APIError: \(error.localizedDescription)")

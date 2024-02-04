@@ -28,10 +28,18 @@
                                 <rect key="frame" x="0.0" y="205" width="393" height="647"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="検索に一致する記事はありませんでした。" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGD-Lq-ZxX">
+                                <rect key="frame" x="50.333333333333343" y="416.66666666666669" width="294.33333333333326" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="gGD-Lq-ZxX" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="1" id="5lM-9y-bMV"/>
+                            <constraint firstItem="gGD-Lq-ZxX" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="1" id="PRW-d0-Di1"/>
                             <constraint firstItem="cbK-VB-Uc6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Wdf-9Z-1bK"/>
                             <constraint firstItem="zBH-AP-OY2" firstAttribute="top" secondItem="cbK-VB-Uc6" secondAttribute="bottom" id="dmH-GK-Cyc"/>
                             <constraint firstItem="zBH-AP-OY2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="jBW-tt-0ii"/>
@@ -43,6 +51,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="tqu-6K-dVT"/>
                     <connections>
+                        <outlet property="noDataLabel" destination="gGD-Lq-ZxX" id="9yQ-ag-os2"/>
                         <outlet property="searchbar" destination="cbK-VB-Uc6" id="Q1m-IZ-Twu"/>
                         <outlet property="tableView" destination="zBH-AP-OY2" id="Qfi-d2-qet"/>
                     </connections>

@@ -15,6 +15,8 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var searchbar: UISearchBar!
     
+    @IBOutlet weak var noDataLabel: UILabel!
+    
     private let disposeBag = DisposeBag()
     
     private let viewModel = ArticleListViewModel()
@@ -184,6 +186,9 @@ extension ViewController {
             Indicator.dismiss()
             if !self.viewModel.articles.value.isEmpty {
                 self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: true)
+                self.noDataLabel.isHidden = true
+            } else {
+                self.noDataLabel.isHidden = false
             }
             
         },failure: { message, type in
@@ -216,6 +221,9 @@ extension ViewController {
             Indicator.dismiss()
             if !self.viewModel.articles.value.isEmpty {
                 self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: true)
+                self.noDataLabel.isHidden = true
+            } else {
+                self.noDataLabel.isHidden = false
             }
             
         }, failure: { message, type in
