@@ -20,7 +20,8 @@ struct  ArticleListViewModel {
     
     
     func getArticles(success: @escaping () -> Void, failure: @escaping (String, ErrorResponse.ErrorType) -> Void) {
-        APIManager.request(request: "items")
+        let param = searchText.value.isEmpty ? nil : ["query":searchText.value]
+        APIManager.request(request: "items", param: param)
             .subscribe(onNext: { response in
                 self.articles.accept(response)
                 success()

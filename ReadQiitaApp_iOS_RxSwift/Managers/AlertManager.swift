@@ -41,4 +41,20 @@ struct AlertManager {
         vc.present(controller, animated: true, completion: nil)
     }
     
+    
+    static func showActionSheet(_ vc: UIViewController, sender: UIBarButtonItem, title: String? = nil, message: String, actions: [UIAlertAction], didTapCancelButton: ((UIAlertAction)->())? = nil) {
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        
+        
+        actions.forEach {
+            controller.addAction($0)
+        }
+        controller.addAction(UIAlertAction(title: "キャンセル",
+                                           style: .cancel,
+                                           handler: didTapCancelButton)
+        )
+        controller.popoverPresentationController?.barButtonItem = sender
+        vc.present(controller, animated: true, completion: nil)
+    }
+    
 }

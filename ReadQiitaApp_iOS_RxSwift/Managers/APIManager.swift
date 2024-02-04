@@ -14,14 +14,14 @@ struct APIManager {
     
     private static let baseUrl = "https://qiita.com/api/v2/"
         
-    static func request<T: Codable>(request: String) -> Observable<T> {
+    static func request<T: Codable>(request: String, param: Parameters? = nil) -> Observable<T> {
         return Observable.create { observable in
             guard let url = URL(string: baseUrl + request) else {
                 observable.onError(APIError(message: "url Error", type: .undefined))
                 return Disposables.create()
             }
             
-            AF.request(url)
+            AF.request(url, parameters: param)
                 .validate()
                 .responseData { result in
                 do {
@@ -33,18 +33,20 @@ struct APIManager {
                     let articles = try JSONDecoder().decode(T.self, from: data)
                     observable.onNext(articles)
                     observable.onCompleted()
+                    
                 } catch {
-                    if let data = result.data,let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
+                    if let data = result.data, let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) {
                         switch errorResponse.type {
                         case ErrorResponse.ErrorType.not_found.rawValue:
                             observable.onError(APIError(message: "検索に一致する記事はありませんでした。", type: .not_found))
                         default:
-                            observable.onError(APIError(message: "response Error", type: .undefined))
+                            observable.onError(APIError(message: "Decode Error", type: .undefined))
                         }
                         
+                    } else {
+                        observable.onError(APIError(message: "Unknown Error", type: .undefined))
                     }
                     
-                    observable.onError(APIError(message: "response Error", type: .undefined))
                 }
                 
             }
