@@ -94,7 +94,7 @@ class ArticleViewController: UIViewController {
 extension ArticleViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        Indicator.show(self.navigationController?.view)
+        Indicator.show(view)
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
