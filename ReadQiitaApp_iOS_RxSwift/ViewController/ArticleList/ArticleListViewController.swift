@@ -108,13 +108,11 @@ extension ViewController {
             guard let self else { return }
             AlertManager.showActionSheet(self, sender: searchModeButton, message: "検索モードを選択してください", actions: [
                 UIAlertAction(title: "キーワード検索", style: .default,handler: { _ in
-                    print("キーワード検索タップ！！")
                     UserDefaults.standard.set(value: SearchMode.keyword.rawValue, key: .searchMode)
                     self.setSearchbarPlaceholder()
                     
                 }),
                 UIAlertAction(title: "タグ検索", style: .default,handler: { _ in
-                    print("タグ検索タップ！！")
                     UserDefaults.standard.set(value: SearchMode.tag.rawValue, key: .searchMode)
                     self.setSearchbarPlaceholder()
                 })
