@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController {
+class ArticleListViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
     
@@ -37,7 +37,7 @@ class ViewController: UIViewController {
 
 // MARK: - SetUI
 
-extension ViewController {
+extension ArticleListViewController {
     
     private func initTableView() {
         getArticleList()
@@ -163,7 +163,7 @@ extension ViewController {
 
 // MARK: - API Request
 
-extension ViewController {
+extension ArticleListViewController {
     
     private func getArticleList() {
         let mode: String = UserDefaults.standard.get(key: .searchMode) ?? ""
