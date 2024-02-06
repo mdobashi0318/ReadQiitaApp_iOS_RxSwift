@@ -199,7 +199,7 @@ extension ArticleListViewController {
             default:
                 AlertManager.showAlert(self, type: .retry, message: "再接続しますか?", didTapPositiveButton: { _ in
                     Indicator.dismiss()
-                    self.getTagArticles()
+                    self.getArticles()
                 }, didTapNegativeButton: { _ in
                     Indicator.dismiss()
                 })
