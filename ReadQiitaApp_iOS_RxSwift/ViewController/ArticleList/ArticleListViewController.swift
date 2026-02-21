@@ -24,8 +24,73 @@ final class ArticleListViewController: UIViewController {
         configureDataSource()
     }
     
+    private func initNavigationItem() {
+        navigationItem.title = "ReadQiitaApp"
+        
+        let bookmarkButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"), style: .plain, target: nil, action: nil)
+        let searchModeButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItems = [bookmarkButton, searchModeButton]
+        
+        bookmarkButton.rx.tap.subscribe(onNext:  { [weak self] in
+            let vc: BookmarkListViewController = BookmarkListViewController()
+            let navi = UINavigationController(rootViewController: vc)
+            navi.modalPresentationStyle = .fullScreen
+            self?.navigationController?.present(navi, animated: true)
+        })
+        .disposed(by: disposeBag)
+        
+        
+        searchModeButton.rx.tap.subscribe(onNext:  { [weak self] in
+            guard let self else { return }
+            AlertManager.showActionSheet(self, sender: searchModeButton, message: "検索モードを選択してください", actions: [
+                UIAlertAction(title: "キーワード検索", style: .default,handler: { _ in
+                    UserDefaults.standard.set(value: SearchMode.keyword.rawValue, key: .searchMode)
+                    self.setSearchbarPlaceholder()
+                    
+                }),
+                UIAlertAction(title: "タグ検索", style: .default,handler: { _ in
+                    UserDefaults.standard.set(value: SearchMode.tag.rawValue, key: .searchMode)
+                    self.setSearchbarPlaceholder()
+                })
+            ])
+        })
+        .disposed(by: disposeBag)
+    }
+    
+    
+    private func initSearchbar() {
+        setSearchbarPlaceholder()
+        searchbar.rx.text
+            .orEmpty
+            .bind(onNext: { [weak self] in
+                guard let self else { return }
+                self.viewModel.searchText.accept($0)
+            })
+            .disposed(by: disposeBag)
+        
+        searchbar.rx.searchButtonClicked.subscribe(onNext: { [weak self] in
+            guard let self else { return }
+            self.getArticleList()
+            self.view.endEditing(true)
+        })
+        .disposed(by: disposeBag)
+    }
+    
+    
+    private func setSearchbarPlaceholder() {
+        if let mode: String = UserDefaults.standard.get(key: .searchMode) {
+            switch mode {
+            case SearchMode.keyword.rawValue:
+                searchbar.placeholder = "検索するキーワードを入力してください"
+            case SearchMode.tag.rawValue:
+                searchbar.placeholder = "検索するタグ名を入力してください"
+            default:
+                searchbar.placeholder = "検索するキーワードを入力してください"
+            }
+        }
+    }
+    
 }
-
 
 
 // MARK: - UITableView
@@ -33,8 +98,6 @@ final class ArticleListViewController: UIViewController {
 extension ArticleListViewController {
     
     private func initTableView() {
-        
-        
         tableView.register(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: "ArticleCell")
         tableView.refreshControl = refreshControl
         
@@ -79,77 +142,6 @@ extension ArticleListViewController {
             })
             .disposed(by: disposeBag)
     }
-    
-    
-    private func initNavigationItem() {
-        navigationItem.title = "ReadQiitaApp"
-        
-        let bookmarkButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"), style: .plain, target: nil, action: nil)
-        let searchModeButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItems = [bookmarkButton, searchModeButton]
-        
-        bookmarkButton.rx.tap.subscribe(onNext:  { [weak self] in
-            let vc: BookmarkListViewController = BookmarkListViewController()
-            let navi = UINavigationController(rootViewController: vc)
-            navi.modalPresentationStyle = .fullScreen
-            self?.navigationController?.present(navi, animated: true)
-        })
-        .disposed(by: disposeBag)
-        
-        
-        searchModeButton.rx.tap.subscribe(onNext:  { [weak self] in
-            guard let self else { return }
-            AlertManager.showActionSheet(self, sender: searchModeButton, message: "検索モードを選択してください", actions: [
-                UIAlertAction(title: "キーワード検索", style: .default,handler: { _ in
-                    UserDefaults.standard.set(value: SearchMode.keyword.rawValue, key: .searchMode)
-                    self.setSearchbarPlaceholder()
-                    
-                }),
-                UIAlertAction(title: "タグ検索", style: .default,handler: { _ in
-                    UserDefaults.standard.set(value: SearchMode.tag.rawValue, key: .searchMode)
-                    self.setSearchbarPlaceholder()
-                })
-            ])
-        })
-        .disposed(by: disposeBag)
-
-    }
-    
-
-    private func initSearchbar() {
-        setSearchbarPlaceholder()
-        searchbar.rx.text
-            .orEmpty
-            .bind(onNext: { [weak self] in
-                guard let self else { return }
-                self.viewModel.searchText.accept($0)
-            })
-            .disposed(by: disposeBag)
-        
-        searchbar.rx.searchButtonClicked.subscribe(onNext: { [weak self] in
-            guard let self else { return }
-            self.getArticleList()
-            self.view.endEditing(true)
-        })
-        .disposed(by: disposeBag)
-    }
-    
-    
-    private func setSearchbarPlaceholder() {
-        if let mode: String = UserDefaults.standard.get(key: .searchMode) {
-            switch mode {
-            case SearchMode.keyword.rawValue:
-                searchbar.placeholder = "検索するキーワードを入力してください"
-            case SearchMode.tag.rawValue:
-                searchbar.placeholder = "検索するタグ名を入力してください"
-            default:
-                searchbar.placeholder = "検索するキーワードを入力してください"
-            }
-        }
-    }
-    
-    
-    
 }
 
 
@@ -213,7 +205,6 @@ extension ArticleListViewController {
                 self.dataSource?.apply(snapshot, animatingDifferences: true)
             })
             .disposed(by: disposeBag)
-        
     }
     
 }
@@ -296,9 +287,7 @@ extension ArticleListViewController {
                     Indicator.dismiss()
                 })
             }
-            
         })
-
     }
     
 }
