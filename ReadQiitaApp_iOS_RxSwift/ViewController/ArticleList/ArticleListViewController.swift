@@ -1,46 +1,39 @@
-//
-//  ViewController.swift
-//  ReadQiitaApp_iOS_RxSwift
-//
-//  Created by 土橋正晴 on 2023/07/03.
-//
-
 import UIKit
 import RxSwift
 import RxCocoa
 
-class ArticleListViewController: UIViewController {
+final class ArticleListViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
-    
-    @IBOutlet weak var searchbar: UISearchBar!
-    
-    @IBOutlet weak var noDataLabel: UILabel!
-    
+    @IBOutlet private weak var containerView: UIView!
+    @IBOutlet private weak var searchbar: UISearchBar!
+    @IBOutlet private weak var noDataLabel: UILabel!
+    private var collectionView: UICollectionView!
     private let disposeBag = DisposeBag()
-    
     private let viewModel = ArticleListViewModel()
-    
     private let refreshControl = UIRefreshControl()
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Article>! = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        getArticleList()
         initNavigationItem()
         initTableView()
         initSearchbar()
+        configure()
+        configureDataSource()
     }
     
 }
 
 
 
-// MARK: - SetUI
+// MARK: - UITableView
 
 extension ArticleListViewController {
     
     private func initTableView() {
-        getArticleList()
+        
         
         tableView.register(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: "ArticleCell")
         tableView.refreshControl = refreshControl
@@ -160,6 +153,61 @@ extension ArticleListViewController {
 }
 
 
+// MARK: - UICollectionView
+
+extension ArticleListViewController {
+    
+    enum Section {
+        case article
+    }
+    
+    func configure() {
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UICollectionViewCompositionalLayout(section: articleLayout()))
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        containerView.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 0),
+            collectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: 0),
+            collectionView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
+            collectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0)
+        ])
+    }
+    
+    
+    private func articleLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(200))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
+        let section = NSCollectionLayoutSection(group: group)
+        return section
+    }
+    
+    private func configureDataSource() {
+        let cellRegistration = UICollectionView.CellRegistration<ArticleCollectionCell, Article>(cellNib: UINib(nibName: "ArticleCollectionCell", bundle: nil)) { cell, indexPath, identifiable in
+            cell.setView(self.viewModel.articles.value[indexPath.row])
+        }
+        dataSource = UICollectionViewDiffableDataSource<Section, Article>(collectionView: collectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Article) -> UICollectionViewCell? in
+            // Return the cell.
+            return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
+        }
+        
+        
+        
+        viewModel.articles
+            .subscribe(onNext: { items in
+                var snapshot = NSDiffableDataSourceSnapshot<Section, Article>()
+                snapshot.appendSections([.article])
+                snapshot.appendItems(items)
+                self.dataSource?.apply(snapshot, animatingDifferences: true)
+            })
+            .disposed(by: disposeBag)
+        
+    }
+    
+}
 
 // MARK: - API Request
 
