@@ -194,6 +194,15 @@ extension ArticleListViewController {
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: identifier)
         }
         
+        collectionView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
+            guard let self else { return }
+            let vc: ArticleViewController = ArticleViewController()
+            vc.id = self.viewModel.articles.value[indexPath.row].id
+            vc.articleTitle = self.viewModel.articles.value[indexPath.row].title
+            vc.url = self.viewModel.articles.value[indexPath.row].url
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+        .disposed(by: disposeBag)
         
         
         viewModel.articles
