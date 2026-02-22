@@ -26,7 +26,8 @@ final class ArticleListViewController: UIViewController {
     private var dispModeButton: UIBarButtonItem!
     private let disposeBag = DisposeBag()
     private let viewModel = ArticleListViewModel()
-    private let refreshControl = UIRefreshControl()
+    private let tableRefreshControl = UIRefreshControl()
+    private let collectionRefreshControl = UIRefreshControl()
     private var dataSource: UICollectionViewDiffableDataSource<Section, Article>! = nil
     private var dispMode: DispMode = .list {
         didSet {
@@ -135,6 +136,14 @@ final class ArticleListViewController: UIViewController {
         }
     }
     
+    private func pushArticleViewController(_ article: Article) {
+        let vc: ArticleViewController = ArticleViewController()
+        vc.id = article.id
+        vc.articleTitle = article.title
+        vc.url = article.url
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
 }
 
 
@@ -144,7 +153,7 @@ extension ArticleListViewController {
     
     private func initTableView() {
         tableView.register(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: "ArticleCell")
-        tableView.refreshControl = refreshControl
+        tableView.refreshControl = tableRefreshControl
         
         // セルをセット
         viewModel.articles.bind(to: tableView.rx.items(cellIdentifier: "ArticleCell", cellType: ArticleCell.self)) { row, article, cell in
@@ -160,12 +169,8 @@ extension ArticleListViewController {
         // セルタップ
         tableView.rx.modelSelected(Article.self)
             .subscribe(onNext: { [weak self] article in
-                let vc: ArticleViewController = ArticleViewController()
-                vc.id = article.id
-                vc.articleTitle = article.title
-                vc.url = article.url
-                self?.navigationController?.pushViewController(vc, animated: true)
-                
+                guard let self else { return }
+                self.pushArticleViewController(article)
             })
             .disposed(by: disposeBag)
         
@@ -176,14 +181,14 @@ extension ArticleListViewController {
         .disposed(by: disposeBag)
         
         // リフレッシュコントロール
-        refreshControl.rx.controlEvent(.valueChanged)
+        tableRefreshControl.rx.controlEvent(.valueChanged)
             .subscribe(onNext: { [weak self] in
                 guard let self else {
-                    self?.refreshControl.endRefreshing()
+                    self?.tableRefreshControl.endRefreshing()
                     return
                 }
                 self.getArticleList()
-                refreshControl.endRefreshing()
+                tableRefreshControl.endRefreshing()
             })
             .disposed(by: disposeBag)
     }
@@ -209,6 +214,19 @@ extension ArticleListViewController {
             collectionView.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
             collectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: 0)
         ])
+        
+        collectionView.refreshControl = collectionRefreshControl
+        // リフレッシュコントロール
+        collectionRefreshControl.rx.controlEvent(.valueChanged)
+            .subscribe(onNext: { [weak self] in
+                guard let self else {
+                    self?.collectionRefreshControl.endRefreshing()
+                    return
+                }
+                self.getArticleList()
+                collectionRefreshControl.endRefreshing()
+            })
+            .disposed(by: disposeBag)
     }
     
     
@@ -233,11 +251,7 @@ extension ArticleListViewController {
         
         collectionView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
             guard let self else { return }
-            let vc: ArticleViewController = ArticleViewController()
-            vc.id = self.viewModel.articles.value[indexPath.row].id
-            vc.articleTitle = self.viewModel.articles.value[indexPath.row].title
-            vc.url = self.viewModel.articles.value[indexPath.row].url
-            self.navigationController?.pushViewController(vc, animated: true)
+            self.pushArticleViewController(self.viewModel.articles.value[indexPath.row])
         })
         .disposed(by: disposeBag)
         
