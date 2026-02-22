@@ -15,6 +15,13 @@ final class ArticleCollectionCell: UICollectionViewCell {
         // Initialization code
         
         contentsView.layer.cornerRadius = 6
+        contentsView.layer.borderColor = UIColor(named: "collectionCorder")?.cgColor
+        contentsView.layer.borderWidth = 0.5
+        
+        contentsView.layer.shadowOffset = CGSize(width: 0.0, height: -1.0)
+        contentsView.layer.shadowColor = UIColor.black.cgColor
+        contentsView.layer.shadowOpacity = 0.2
+        contentsView.layer.shadowRadius = 8
     }
     
     func setView(_ article: Article) {
