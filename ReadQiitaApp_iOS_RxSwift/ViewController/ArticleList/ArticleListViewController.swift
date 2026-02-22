@@ -4,18 +4,44 @@ import RxCocoa
 
 final class ArticleListViewController: UIViewController {
     
+    enum DispMode: String {
+        case list
+        case grid
+        
+        var title: String {
+            return switch self {
+            case .list:
+                "リスト"
+            case .grid:
+                "グリッド"
+            }
+        }
+    }
+    
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var searchbar: UISearchBar!
     @IBOutlet private weak var noDataLabel: UILabel!
     private var collectionView: UICollectionView!
+    private var dispModeButton: UIBarButtonItem!
     private let disposeBag = DisposeBag()
     private let viewModel = ArticleListViewModel()
     private let refreshControl = UIRefreshControl()
     private var dataSource: UICollectionViewDiffableDataSource<Section, Article>! = nil
+    private var dispMode: DispMode = .list {
+        didSet {
+            let isList = dispMode == .list
+            containerView.isHidden = isList
+            tableView.isHidden = !isList
+        }
+    }
+    private let listImage = UIImage(systemName: "list.bullet")
+    private let squareImage = UIImage(systemName: "square.grid.2x2")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        dispMode = DispMode(rawValue: UserDefaults.standard.get(key: .dispMode) ?? DispMode.list.rawValue) ?? .list
         getArticleList()
         initNavigationItem()
         initTableView()
@@ -29,7 +55,9 @@ final class ArticleListViewController: UIViewController {
         
         let bookmarkButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"), style: .plain, target: nil, action: nil)
         let searchModeButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: nil, action: nil)
-        navigationItem.rightBarButtonItems = [bookmarkButton, searchModeButton]
+        dispModeButton = UIBarButtonItem(image: dispMode == .list ? listImage : squareImage,
+                                         style: .plain, target: nil, action: nil)
+        navigationItem.rightBarButtonItems = [bookmarkButton, searchModeButton, dispModeButton]
         
         bookmarkButton.rx.tap.subscribe(onNext:  { [weak self] in
             let vc: BookmarkListViewController = BookmarkListViewController()
@@ -51,6 +79,23 @@ final class ArticleListViewController: UIViewController {
                 UIAlertAction(title: "タグ検索", style: .default,handler: { _ in
                     UserDefaults.standard.set(value: SearchMode.tag.rawValue, key: .searchMode)
                     self.setSearchbarPlaceholder()
+                })
+            ])
+        })
+        .disposed(by: disposeBag)
+        
+        dispModeButton.rx.tap.subscribe(onNext:  { [weak self] in
+            guard let self else { return }
+            AlertManager.showActionSheet(self, sender: searchModeButton, message: "表示モードを選択してください", actions: [
+                UIAlertAction(title: DispMode.list.title, style: .default,handler: { _ in
+                    UserDefaults.standard.set(value: DispMode.list.rawValue, key: .dispMode)
+                    self.dispMode = .list
+                    self.dispModeButton.image = self.listImage
+                }),
+                UIAlertAction(title: DispMode.grid.title, style: .default,handler: { _ in
+                    UserDefaults.standard.set(value: DispMode.grid.rawValue, key: .dispMode)
+                    self.dispModeButton.image = self.squareImage
+                    self.dispMode = .grid
                 })
             ])
         })
