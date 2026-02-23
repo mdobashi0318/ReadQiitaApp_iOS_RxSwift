@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct User :Codable {
+struct User: Codable, Hashable {
     let description: String?
     let facebook_id: String?
     let followees_count: Int

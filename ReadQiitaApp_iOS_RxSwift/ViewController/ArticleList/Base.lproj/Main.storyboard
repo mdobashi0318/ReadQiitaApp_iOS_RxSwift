@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vKH-2r-Les">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vKH-2r-Les">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -18,16 +17,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" placeholder="検索するキーワードを入力してください" translatesAutoresizingMaskIntoConstraints="NO" id="cbK-VB-Uc6">
-                                <rect key="frame" x="0.0" y="155" width="393" height="50"/>
+                                <rect key="frame" x="0.0" y="224" width="393" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="TMl-1E-mfA"/>
                                 </constraints>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="zBH-AP-OY2">
-                                <rect key="frame" x="0.0" y="205" width="393" height="647"/>
+                                <rect key="frame" x="0.0" y="274" width="393" height="578"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hyZ-Hd-r3Q" userLabel="ContainerView">
+                                <rect key="frame" x="0.0" y="274" width="393" height="578"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="検索に一致する記事はありませんでした。" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGD-Lq-ZxX">
                                 <rect key="frame" x="50.333333333333343" y="416.66666666666669" width="294.33333333333326" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -38,19 +41,24 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="hyZ-Hd-r3Q" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="31F-sI-8Wu"/>
                             <constraint firstItem="gGD-Lq-ZxX" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="1" id="5lM-9y-bMV"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="hyZ-Hd-r3Q" secondAttribute="trailing" id="NmQ-kk-ifP"/>
                             <constraint firstItem="gGD-Lq-ZxX" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="1" id="PRW-d0-Di1"/>
                             <constraint firstItem="cbK-VB-Uc6" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Wdf-9Z-1bK"/>
+                            <constraint firstItem="hyZ-Hd-r3Q" firstAttribute="top" secondItem="cbK-VB-Uc6" secondAttribute="bottom" id="Wq3-oz-3ae"/>
                             <constraint firstItem="zBH-AP-OY2" firstAttribute="top" secondItem="cbK-VB-Uc6" secondAttribute="bottom" id="dmH-GK-Cyc"/>
                             <constraint firstItem="zBH-AP-OY2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="jBW-tt-0ii"/>
                             <constraint firstItem="cbK-VB-Uc6" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="pNa-Br-zbb"/>
                             <constraint firstAttribute="bottom" secondItem="zBH-AP-OY2" secondAttribute="bottom" id="s83-Wb-Jk6"/>
                             <constraint firstItem="cbK-VB-Uc6" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="tkG-BR-eSz"/>
                             <constraint firstItem="zBH-AP-OY2" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="zml-Hc-J2w"/>
+                            <constraint firstAttribute="bottom" secondItem="hyZ-Hd-r3Q" secondAttribute="bottom" id="zsU-HZ-JdH"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tqu-6K-dVT"/>
                     <connections>
+                        <outlet property="containerView" destination="hyZ-Hd-r3Q" id="tSH-ed-eY8"/>
                         <outlet property="noDataLabel" destination="gGD-Lq-ZxX" id="9yQ-ag-os2"/>
                         <outlet property="searchbar" destination="cbK-VB-Uc6" id="Q1m-IZ-Twu"/>
                         <outlet property="tableView" destination="zBH-AP-OY2" id="Qfi-d2-qet"/>
@@ -66,7 +74,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="vKH-2r-Les" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="72n-d9-okt">
-                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="106"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
