@@ -290,6 +290,7 @@ extension ArticleListViewController {
             Indicator.dismiss()
             if !self.viewModel.articles.value.isEmpty {
                 self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: true)
+                self.collectionView.setContentOffset(.zero, animated: true)
                 self.noDataLabel.isHidden = true
             } else {
                 self.noDataLabel.isHidden = false
@@ -325,6 +326,7 @@ extension ArticleListViewController {
             Indicator.dismiss()
             if !self.viewModel.articles.value.isEmpty {
                 self.tableView.scrollToRow(at: .init(row: 0, section: 0), at: .top, animated: true)
+                self.collectionView.setContentOffset(.zero, animated: true)
                 self.noDataLabel.isHidden = true
             } else {
                 self.noDataLabel.isHidden = false
