@@ -42,6 +42,22 @@ struct ArticleViewModel {
         }
     }
     
+    func addHistory(id: String, title: String, url: String)  {
+            if let object = History.find(id: id) {
+                let newValue = History()
+                newValue.id = id
+                newValue.title = title
+                newValue.url = url
+                try? History.update(object, newValue: newValue)
+            } else {
+                let history = History()
+                history.id = id
+                history.title = title
+                history.url = url
+                try? History.add(history)
+            }
+    }
+    
     
     func delete(id: String, title: String, url: String, success: @escaping () -> Void, failure: @escaping () -> Void)  {
         do {

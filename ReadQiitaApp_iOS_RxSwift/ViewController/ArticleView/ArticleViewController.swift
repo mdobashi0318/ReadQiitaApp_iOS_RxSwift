@@ -27,6 +27,7 @@ class ArticleViewController: UIViewController {
             })
             return
         }
+        viewModel.addHistory(id: id, title: articleTitle, url: self.url)
         webView.load(URLRequest(url: url))
     }
     

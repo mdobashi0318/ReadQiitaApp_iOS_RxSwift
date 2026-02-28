@@ -53,12 +53,21 @@ final class ArticleListViewController: UIViewController {
     
     private func initNavigationItem() {
         navigationItem.title = "ReadQiitaApp"
-        
+        let historyButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "clock"), style: .plain, target: nil, action: nil)
         let bookmarkButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"), style: .plain, target: nil, action: nil)
         let searchModeButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: nil, action: nil)
         dispModeButton = UIBarButtonItem(image: dispMode == .list ? listImage : squareImage,
                                          style: .plain, target: nil, action: nil)
+        navigationItem.leftBarButtonItem = historyButton
         navigationItem.rightBarButtonItems = [bookmarkButton, searchModeButton, dispModeButton]
+        
+        historyButton.rx.tap.subscribe(onNext:  { [weak self] in
+            let vc: HistoryListViewController = HistoryListViewController()
+            let navi = UINavigationController(rootViewController: vc)
+            navi.modalPresentationStyle = .fullScreen
+            self?.navigationController?.present(navi, animated: true)
+        })
+        .disposed(by: disposeBag)
         
         bookmarkButton.rx.tap.subscribe(onNext:  { [weak self] in
             let vc: BookmarkListViewController = BookmarkListViewController()
