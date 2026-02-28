@@ -51,11 +51,10 @@ class HistoryListViewController: UIViewController {
     
     
     private func initTableView() {
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(UINib(nibName: "HistoryCell", bundle: nil), forCellReuseIdentifier: "Cell")
         // セルをセット
-        historyList.bind(to: tableView.rx.items(cellIdentifier: "Cell", cellType: UITableViewCell.self)) { row, history, cell in
-            cell.textLabel?.text = history.title
-            
+        historyList.bind(to: tableView.rx.items(cellIdentifier: "Cell", cellType: HistoryCell.self)) { row, history, cell in
+            cell.setView(history: history)
         }
         .disposed(by: disposeBag)
         
