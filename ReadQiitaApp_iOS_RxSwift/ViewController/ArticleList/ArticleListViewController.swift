@@ -54,7 +54,7 @@ final class ArticleListViewController: UIViewController {
     private func initNavigationItem() {
         navigationItem.title = "ReadQiitaApp"
         let historyButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "clock"), style: .plain, target: nil, action: nil)
-        let bookmarkButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "bookmark.fill"), style: .plain, target: nil, action: nil)
+        let bookmarkButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "bookmark"), style: .plain, target: nil, action: nil)
         let searchModeButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "magnifyingglass"), style: .plain, target: nil, action: nil)
         dispModeButton = UIBarButtonItem(image: dispMode == .list ? listImage : squareImage,
                                          style: .plain, target: nil, action: nil)
