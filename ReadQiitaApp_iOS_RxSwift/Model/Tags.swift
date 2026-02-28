@@ -10,7 +10,7 @@ import Foundation
 
 import Foundation
 
-struct Tags: Codable{
+struct Tags: Codable, Hashable {
     let name: String
     let versions: [String]
 }

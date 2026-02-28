@@ -1,10 +1,3 @@
-//
-//  ArticleViewController.swift
-//  ReadQiitaApp_iOS_RxSwift
-//
-//  Created by 土橋正晴 on 2023/07/04.
-//
-
 import UIKit
 import WebKit
 import RxSwift
@@ -12,20 +5,14 @@ import RxSwift
 class ArticleViewController: UIViewController {
     
     @IBOutlet private weak var webView: WKWebView!
-    
     private let disposeBag = DisposeBag()
-    
     private let viewModel = ArticleViewModel()
-    
     var id: String = ""
-    
     var articleTitle: String = ""
-    
     var url: String = ""
-    
     private let addButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: nil, action: nil)
-    
     private let deleteButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: nil, action: nil)
+    private let backButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: nil, action: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,15 +27,16 @@ class ArticleViewController: UIViewController {
             })
             return
         }
+        viewModel.addHistory(id: id, title: articleTitle, url: self.url)
         webView.load(URLRequest(url: url))
     }
     
     
     private func initNavigationItem() {
         navigationItem.title = "記事"
-        
+        navigationItem.leftBarButtonItem = backButton
         viewModel.isAdded.asObservable().subscribe(onNext: { [weak self] isAdded in
-            guard let self else{
+            guard let self else {
                 return
             }
             if isAdded {
@@ -61,7 +49,7 @@ class ArticleViewController: UIViewController {
         
         
         addButton.rx.tap.subscribe(onNext:  { [weak self] in
-            guard let self else{
+            guard let self else {
                 return
             }
                 viewModel.add(id: id, title: articleTitle, url: url, success: {
@@ -74,7 +62,7 @@ class ArticleViewController: UIViewController {
         
         
         deleteButton.rx.tap.subscribe(onNext:  { [weak self] in
-            guard let self else{
+            guard let self else {
                 return
             }
             viewModel.delete(id: id, title: articleTitle, url: url, success: {
@@ -85,6 +73,17 @@ class ArticleViewController: UIViewController {
         })
         .disposed(by: disposeBag)
         
+        backButton.rx.tap.subscribe(onNext: { [weak self] in
+            guard let self else {
+                return
+            }
+            if self.webView.canGoBack {
+                self.webView.goBack()
+            } else {
+                self.navigationController?.popViewController(animated: true)
+            }
+        })
+        .disposed(by: disposeBag)
     }
 }
 
@@ -104,6 +103,4 @@ extension ArticleViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError: Error) {
         Indicator.dismiss()
     }
-    
-    
 }
