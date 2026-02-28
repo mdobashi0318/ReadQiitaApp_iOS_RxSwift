@@ -54,6 +54,13 @@ class History: Object {
             try realm.write {
                 realm.add(history)
             }
+            
+            let model = getAll()
+            if model.count > 30,
+               let last = model.last {
+                try? delete(last)
+            }
+            
         } catch {
 #if DEBUG
             print("履歴に追加失敗: \(error)")

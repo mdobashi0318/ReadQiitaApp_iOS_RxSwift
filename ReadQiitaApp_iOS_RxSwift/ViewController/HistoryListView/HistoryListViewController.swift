@@ -12,7 +12,7 @@ import RxCocoa
 class HistoryListViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView!
-    @IBOutlet weak var noDataLable: UILabel!
+    @IBOutlet private weak var noDataLable: UILabel!
     private let disposeBag = DisposeBag()
     private let historyList = BehaviorRelay<[History]>(value: [])
     
@@ -59,23 +59,35 @@ class HistoryListViewController: UIViewController {
         }
         .disposed(by: disposeBag)
         
-        // セルタップ
-        tableView.rx.modelSelected(History.self)
-            .subscribe(onNext: { [weak self] article in
-                let vc: ArticleViewController = ArticleViewController()
-                vc.id = article.id
-                vc.articleTitle = article.title
-                vc.url = article.url
-                self?.navigationController?.pushViewController(vc, animated: true)
-                
-            })
+        tableView.rx
+            .setDelegate(self)
             .disposed(by: disposeBag)
-        
-        // 選択状態のハイライト解除
-        tableView.rx.itemSelected.subscribe(onNext: { [weak self] indexPath in
-            self?.tableView.deselectRow(at: indexPath, animated: true)
-        })
-        .disposed(by: disposeBag)
     }
     
+}
+
+
+extension HistoryListViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc: ArticleViewController = ArticleViewController()
+        let article = historyList.value[indexPath.row]
+        vc.id = article.id
+        vc.articleTitle = article.title
+        vc.url = article.url
+        navigationController?.pushViewController(vc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
+    {
+        let deleteAction = UIContextualAction(style: .destructive, title: "削除", handler: { _, _, completionHandler in
+            try? History.delete(self.historyList.value[indexPath.row])
+            self.historyList.accept(History.getAll())
+            completionHandler(true)
+        })
+        
+        return UISwipeActionsConfiguration(actions: [deleteAction])
+    }
 }
